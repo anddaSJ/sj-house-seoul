@@ -5,9 +5,9 @@
   <title>SJ House Seoul · Your Family's Home in the Heart of Seoul</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #10151f; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
-    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #10151f; z-index: 9999; }
+    body { background: #c4b49a; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #6b5e4a; background: #ede4d6; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(100,80,50,0.15); z-index: 10000; }
+    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #c4b49a; z-index: 9999; }
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
     #__bundler_placeholder { color: #999; font-size: 14px; }
   </style>
@@ -21,11 +21,24 @@
 <body>
   <div id="__bundler_thumbnail">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1200" height="800" fill="#10151f"></rect>
+    <defs>
+      <filter id="plaster-thumb">
+        <feTurbulence type="fractalNoise" baseFrequency="0.68 0.62" numOctaves="4" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+        <feBlend in="SourceGraphic" in2="grey" mode="multiply"/>
+      </filter>
+    </defs>
+    <rect width="1200" height="800" fill="#c8ba9e" filter="url(#plaster-thumb)"></rect>
+    <rect width="1200" height="800" fill="url(#depth)" opacity="0.4"></rect>
+    <radialGradient id="depth" cx="30%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#d9ccb0"/>
+      <stop offset="60%" stop-color="#b8a98b"/>
+      <stop offset="100%" stop-color="#c0b290"/>
+    </radialGradient>
     <circle cx="600" cy="330" r="120" fill="none" stroke="#c9a25b" stroke-width="6"></circle>
     <text x="600" y="372" text-anchor="middle" font-family="Georgia, serif" font-size="120" font-weight="600" fill="#c9a25b">SJ</text>
-    <text x="600" y="520" text-anchor="middle" font-family="Georgia, serif" font-size="64" fill="#f3efe6">SJ House Seoul</text>
-    <text x="600" y="575" text-anchor="middle" font-family="sans-serif" font-size="22" letter-spacing="6" fill="#7d8493">CHEONGPA-DONG · SEOUL STATION</text>
+    <text x="600" y="520" text-anchor="middle" font-family="Georgia, serif" font-size="64" fill="#3d2e1e">SJ House Seoul</text>
+    <text x="600" y="575" text-anchor="middle" font-family="sans-serif" font-size="22" letter-spacing="6" fill="#6b5e4a">CHEONGPA-DONG · SEOUL STATION</text>
   </svg>
 </div>
   <div id="__bundler_loading">Unpacking...</div>
@@ -116,9 +129,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     // The manifest bytes are ours; SRI protects against CDN compromise, not this.
     template = template.replace(/\s+integrity="[^"]*"/gi, '').replace(/\s+crossorigin="[^"]*"/gi, '');
 
+    // Replace app dark background with plaster base
+    template = template.replace(/background:#0b0f16/g, 'background:#c4b49a')
+                       .replace(/background-color:#0b0f16/g, 'background-color:#c4b49a');
+
     const resourceScript = '<script>window.__resources = ' +
       JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
       ';</' + 'script>';
+
+    // Warm sand-beige lime plaster wall texture
+    const plastertextureStyle = '<style>' +
+      'html,body{background-color:#c4b49a!important}' +
+      'body{' +
+        'background-image:' +
+          'url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.68 0.62%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22saturate%22 values=%220%22/%3E%3C/filter%3E%3Crect width=%22320%22 height=%22320%22 filter=%22url(%23n)%22 opacity=%220.065%22/%3E%3C/svg%3E"),' +
+          'repeating-linear-gradient(127deg,transparent 0,transparent 10px,rgba(255,250,240,.016) 10px,rgba(255,250,240,.016) 11px),' +
+          'repeating-linear-gradient(40deg,transparent 0,transparent 17px,rgba(90,68,40,.011) 17px,rgba(90,68,40,.011) 18px),' +
+          'repeating-linear-gradient(83deg,transparent 0,transparent 28px,rgba(255,248,235,.009) 28px,rgba(255,248,235,.009) 29px),' +
+          'radial-gradient(ellipse 80% 60% at 12% 18%,rgba(222,210,188,.52) 0%,transparent 58%),' +
+          'radial-gradient(ellipse 60% 80% at 88% 82%,rgba(182,166,138,.46) 0%,transparent 55%),' +
+          'radial-gradient(ellipse 65% 50% at 58% 48%,rgba(214,202,178,.38) 0%,transparent 50%),' +
+          'radial-gradient(ellipse 45% 65% at 28% 78%,rgba(202,188,162,.3) 0%,transparent 45%),' +
+          'linear-gradient(162deg,#cfc2a7 0%,#bdb090 28%,#c9bc9f 56%,#bfb28e 100%)!important;' +
+        'background-size:320px 320px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%!important;' +
+        'background-attachment:fixed!important' +
+      '}' +
+      '</style>';
+
     // Inject after <head> so the DOCTYPE stays first; prepending the script
     // would push the parser into quirks mode. DOMParser always emits a <head>
     // (synthesizing one if the source HTML omitted it) but may carry
@@ -127,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const headOpen = template.match(/<head[^>]*>/i);
     if (headOpen) {
       const i = headOpen.index + headOpen[0].length;
-      template = template.slice(0, i) + resourceScript + template.slice(i);
+      template = template.slice(0, i) + resourceScript + plastertextureStyle + template.slice(i);
     }
 
     // Parse the template and swap the root element. Scripts inserted via
