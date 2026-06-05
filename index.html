@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     template = template.replace(/background:#0b0f16/g, 'background:#c4b49a')
                        .replace(/background-color:#0b0f16/g, 'background-color:#c4b49a');
 
-    // Change nav bar logo to ANDDA STAY
+    // Nav: logo text to ANDDA STAY
     template = template
       .replace('aria-label="SJ House Seoul home"', 'aria-label="ANDDA STAY home"')
       .replace(
@@ -141,11 +141,50 @@ document.addEventListener('DOMContentLoaded', async function() {
         '<span class="name">ANDDA STAY<small>'
       );
 
+    // Nav: subtitle under logo
+    template = template.replace(
+      '<small>Cheongpa-dong · Seoul Station</small>',
+      '<small>The Heart of Seoul, Seoul Station</small>'
+    );
+
+    // Nav: update menu items (Stay, Location, Why Us, FAQ)
+    template = template.replace(
+      /<nav class="nav-links">[\s\S]*?<\/nav>/,
+      '<nav class="nav-links">' +
+        '<a href="#properties">Stay</a>' +
+        '<a href="#location">Location</a>' +
+        '<a href="#why-us">Why Us</a>' +
+        '<a href="#faq">FAQ</a>' +
+      '</nav>'
+    );
+
+    // Nav: remove Book Now CTA button
+    template = template.replace(/<div class="nav-cta">[\s\S]*?<\/div>/, '');
+
+    // Hero: replace entire section with video background + centered copy
+    var heroIdx = template.indexOf('<section class="hero"');
+    var trustIdx = template.indexOf('<!-- ================= TRUST BAR');
+    if (heroIdx >= 0 && trustIdx >= 0) {
+      template = template.slice(0, heroIdx) +
+        '<section class="hero" id="top">' +
+          '<div class="hero-bg">' +
+            '<video autoplay loop muted playsinline>' +
+              '<source src="/public/videos/download.mp4" type="video/mp4">' +
+            '</video>' +
+          '</div>' +
+          '<div class="hero-center">' +
+            '<h1 class="hero-headline">Stay Seoul Like a Local</h1>' +
+            '<p class="hero-sub">Comfort, Space, and Convenience for Families</p>' +
+          '</div>' +
+        '</section>\n\n' +
+        template.slice(trustIdx);
+    }
+
     const resourceScript = '<script>window.__resources = ' +
       JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
       ';</' + 'script>';
 
-    // Warm sand-beige lime plaster wall texture
+    // Warm sand-beige lime plaster + hero video styles
     const plastertextureStyle = '<style>' +
       'html,body{background-color:#c4b49a!important}' +
       'body{' +
@@ -162,6 +201,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         'background-size:320px 320px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%!important;' +
         'background-attachment:fixed!important' +
       '}' +
+      '.hero{position:relative!important;height:100vh!important;min-height:600px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:none!important}' +
+      '.hero::before{content:""!important;position:absolute!important;inset:0!important;z-index:1!important;background:rgba(0,0,0,0.42)!important;pointer-events:none!important}' +
+      '.hero-bg{position:absolute!important;inset:0!important;z-index:0!important}' +
+      '.hero-bg video{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}' +
+      '.hero-center{position:relative!important;z-index:2!important;text-align:center!important;padding:0 24px!important;max-width:900px!important}' +
+      '.hero-headline{font-weight:700!important;font-size:60px!important;color:#fff!important;line-height:1.1!important;margin:0 0 24px!important;letter-spacing:-0.5px!important;font-style:normal!important}' +
+      '.hero-sub{font-weight:300!important;font-size:18px!important;color:rgba(255,255,255,0.88)!important;margin:0!important;line-height:1.6!important}' +
+      '.nav-cta{display:none!important}' +
+      '@media(max-width:768px){.hero-headline{font-size:38px!important}.hero-sub{font-size:16px!important}}' +
+      '@media(max-width:480px){.hero-headline{font-size:36px!important}}' +
       '</style>';
 
     // Inject after <head> so the DOCTYPE stays first; prepending the script
