@@ -133,6 +133,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     template = template.replace(/background:#0b0f16/g, 'background:#c4b49a')
                        .replace(/background-color:#0b0f16/g, 'background-color:#c4b49a');
 
+    // Change nav bar logo to ANDDA STAY
+    template = template
+      .replace('aria-label="SJ House Seoul home"', 'aria-label="ANDDA STAY home"')
+      .replace(
+        /<span class="mark">SJ<\/span>(\s*\n\s*)<span class="name">SJ House Seoul<small>/,
+        '<span class="name">ANDDA STAY<small>'
+      );
+
     const resourceScript = '<script>window.__resources = ' +
       JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
       ';</' + 'script>';
