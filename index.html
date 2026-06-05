@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Hero: replace entire section with video background + centered copy
     var heroIdx = template.indexOf('<section class="hero"');
-    var trustIdx = template.indexOf('<!-- ================= TRUST BAR');
+    var trustIdx = template.indexOf('<' + '!-- ================= TRUST BAR');
     if (heroIdx >= 0 && trustIdx >= 0) {
       template = template.slice(0, heroIdx) +
         '<section class="hero" id="top">' +
