@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       /<article class="prop-card" data-reveal="" data-d="1">[\s\S]*?<\/article>/,
       '<article class="prop-card" data-reveal="" data-d="1">' +
         '<div class="prop-photo">' +
-          '<img src="/public/images/seoul-station-family-room-41.jpg" alt="SJ House 1st family room near Seoul Station">' +
+          '<img src="/public/images/seoul-station-family-room-61.jpg" alt="SJ House 1st family room near Seoul Station">' +
           '<span class="tag">SJ House 1st</span>' +
         '</div>' +
         '<div class="prop-body">' +
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', async function() {
               '</article>' +
               '<article class="serv-card" data-reveal="" data-d="3">' +
                 '<div class="num">03</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 18h11a3.5 3.5 0 0 0 3.5-3.5v-1A3.5 3.5 0 0 0 14.5 10H8z" stroke-linejoin="round"></path><path d="M3.5 18v-2.4"></path><path d="M9 6c.7-.8.7-1.7 0-2.5M12.5 6c.7-.8.7-1.7 0-2.5" stroke-linecap="round"></path></svg>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4.2a1.6 1.6 0 1 1 1.7 1.6" stroke-linecap="round"></path><path d="M12 5.8v2" stroke-linecap="round"></path><path d="M12 7.8 4 13.2a1.7 1.7 0 0 0 .95 3.1h14.1a1.7 1.7 0 0 0 .95-3.1z" stroke-linejoin="round"></path><path d="M7.2 16.3h9.6" stroke-linecap="round"></path></svg>' +
                 '<h3 data-i18n="serv3-h">Steam Closet</h3>' +
                 '<p data-i18n="serv3-p">Refresh your clothes during your trip with our in-home steam closet — a travel essential for families, long stays, and special outings.</p>' +
               '</article>' +
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', async function() {
               '</article>' +
               '<article class="serv-card" data-reveal="" data-d="5">' +
                 '<div class="num">05</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="16" r="3.3"></circle><path d="M8.3 13.7 12 8.2" stroke-linecap="round"></path><path d="M10.6 9.8h2.3" stroke-linecap="round"></path><path d="M13.5 8.3h6.5v9.7a1.5 1.5 0 0 1-1.5 1.5h-3.5a1.5 1.5 0 0 1-1.5-1.5z"></path><path d="M20 11h.8a1.5 1.5 0 0 1 0 3h-.8"></path><path d="M15 8.3V6.7M17.5 8.3V6.7M19.7 8.3V7" stroke-linecap="round"></path></svg>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.6 12.5h16.8" stroke-linecap="round"></path><path d="M3.6 12.5a8.4 6 0 0 0 16.8 0" stroke-linecap="round"></path><path d="M9 12.2c0-2.6 1.3-3.7 1.3-5.4 0-1-.5-1.7-1-2.1" stroke-linecap="round"></path><path d="M13 12.2c0-2.1 1.05-3 1.05-4.4 0-.8-.4-1.4-.8-1.7" stroke-linecap="round"></path><path d="M5 18.6h14" stroke-linecap="round"></path></svg>' +
                 '<h3 data-i18n="serv5-h">Local Food &amp; Grocery Tablet</h3>' +
                 '<p data-i18n="serv5-p">Use our dedicated guest tablet to conveniently order local delivery food, groceries, and daily essentials during your stay.</p>' +
               '</article>' +
@@ -401,13 +401,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         '<span data-i18n="wa-btn">Message us on WhatsApp</span>'
       );
     const waMessage =
-      'Hello ANDDA STAY,\n\n' +
-      'I would like to inquire about availability.\n\n' +
-      'Preferred Property:\n[Guest enters property name]\n\n' +
-      'Check-in Date:\n[Guest enters date]\n\n' +
-      'Check-out Date:\n[Guest enters date]\n\n' +
-      'Number of Guests:\n[Guest enters guest count]\n\n' +
-      'Thank you.';
+      'Hello, I’d like to ask about availability.\n' +
+      'Accommodation:\n' +
+      'Dates:\n' +
+      'Guests:';
     template = template.replace(
       '<a href="https://wa.me/821046411656" target="_blank" rel="noopener" class="btn btn-wa">',
       '<a href="https://wa.me/821046411656?text=' + encodeURIComponent(waMessage) + '" target="_blank" rel="noopener" class="btn btn-wa">'
@@ -510,17 +507,25 @@ document.addEventListener('DOMContentLoaded', async function() {
       '.map-frame .map-link svg{color:var(--gold)!important}' +
       '.map-frame .map-link span{font-family:"Cormorant Garamond",serif!important;font-size:21px!important;font-weight:600!important;letter-spacing:.04em!important;color:#f3efe6!important}' +
       '.map-frame .map-link:hover{filter:brightness(1.08)!important}' +
-      '#why-us .serv-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important}' +
+      '#why-us .serv-grid{grid-template-columns:repeat(5,1fr)!important;gap:14px!important}' +
+      '#why-us .serv-card{padding:46px 20px!important;min-height:420px!important;display:flex!important;flex-direction:column!important}' +
+      '@media(max-width:1180px){#why-us .serv-card{min-height:0!important}}' +
+      '#why-us .serv-card h3{font-size:18px!important;line-height:1.28!important;margin-bottom:10px!important}' +
+      '#why-us .serv-card p{font-size:12.5px!important;line-height:1.65!important}' +
+      '@media(max-width:1180px){#why-us .serv-grid{grid-template-columns:repeat(3,1fr)!important}}' +
+      '@media(max-width:760px){#why-us .serv-grid{grid-template-columns:repeat(2,1fr)!important}}' +
+      '@media(max-width:520px){#why-us .serv-grid{grid-template-columns:1fr!important;max-width:420px!important;margin:0 auto!important}}' +
       '.hero-text{position:absolute!important;inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;z-index:2!important;opacity:0!important;pointer-events:none!important;transition:opacity 1.1s ease!important}' +
       '.hero-text.is-visible{opacity:1!important}' +
-      '.hero-text span{font-family:"DM Sans",sans-serif!important;font-weight:700!important;color:#fff!important;font-size:133px!important;line-height:1.05!important;letter-spacing:.01em!important;padding:0 24px!important;text-shadow:0 2px 28px rgba(0,0,0,.18)!important}' +
+      '.hero-bg::after{content:none!important;display:none!important;background:none!important}' +
+      '.hero-text span{font-family:"DM Sans",sans-serif!important;font-weight:300!important;color:#fff!important;font-size:133px!important;line-height:1.05!important;letter-spacing:.02em!important;padding:0 24px!important;text-shadow:0 2px 28px rgba(0,0,0,.18)!important}' +
       '@media(max-width:1300px){.hero-text span{font-size:96px!important}}' +
       '@media(max-width:900px){.hero-text span{font-size:64px!important}}' +
       '@media(max-width:560px){.hero-text span{font-size:42px!important}}' +
       '@media(max-width:380px){.hero-text span{font-size:34px!important}}' +
       '.nav-links{margin-left:auto!important;margin-right:28px!important;gap:26px!important}' +
-      '.nav-msg{font-family:inherit!important;background:transparent!important;border:1px solid rgba(243,239,230,.28)!important;color:var(--muted)!important;font-size:11px!important;font-weight:500!important;letter-spacing:.03em!important;padding:6px 12px!important;border-radius:20px!important;line-height:1.4!important;white-space:nowrap!important;text-decoration:none!important;display:inline-flex!important;align-items:center!important;transition:all .3s var(--ease)!important}' +
-      '.nav-msg:hover{border-color:var(--gold)!important;color:var(--ink)!important;background:transparent!important}' +
+      '.nav-msg{font-family:inherit!important;background:#f4c945!important;border:1px solid #f4c945!important;color:#2b2420!important;font-size:11px!important;font-weight:700!important;letter-spacing:.03em!important;padding:6px 14px!important;border-radius:20px!important;line-height:1.4!important;white-space:nowrap!important;text-decoration:none!important;display:inline-flex!important;align-items:center!important;transition:all .3s var(--ease)!important}' +
+      '.nav-msg:hover{background:#ecbe2c!important;border-color:#ecbe2c!important;color:#1f1a16!important}' +
       '.map-frame{position:relative!important}' +
       '.map-photo-link{position:absolute!important;inset:0!important;display:block!important;text-decoration:none!important}' +
       '.map-photo-link img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}' +
