@@ -144,20 +144,24 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Nav: subtitle under logo (enlarged one step via plastertextureStyle)
     template = template.replace(
       '<small>Cheongpa-dong · Seoul Station</small>',
-      '<small>Stay Seoul Like a Local</small>'
+      '<small data-i18n="logo-sub">Stay Seoul Like a Local</small>'
     );
 
-    // Nav: update menu items (Stay, Location, Why Us)
+    // Nav: update menu items (Stay, Location, Why Us) — grouped via CSS
+    // (.nav-links gets margin-left:auto) so they sit close to the language
+    // selector / CTA cluster on the right side of the bar.
     template = template.replace(
       /<nav class="nav-links">[\s\S]*?<\/nav>/,
       '<nav class="nav-links">' +
-        '<a href="#properties">Stay</a>' +
-        '<a href="#location">Location</a>' +
-        '<a href="#why-us">Why Us</a>' +
+        '<a href="#properties" data-i18n="nav-stay">Stay</a>' +
+        '<a href="#location" data-i18n="nav-location">Location</a>' +
+        '<a href="#why-us" data-i18n="nav-why">Why Us</a>' +
       '</nav>'
     );
 
-    // Nav: language toggle + "Message Us" CTA (scrolls to Ready-to-Book section)
+    // Nav: language toggle + "Message Us" CTA (scrolls to Ready-to-Book section).
+    // The CTA reuses the .lang-btn pill styling (via .nav-msg in plastertextureStyle)
+    // so all three controls share identical height, padding, radius, and type.
     template = template.replace(
       /<div class="nav-cta">[\s\S]*?<\/div>/,
       '<div class="nav-cta">' +
@@ -165,12 +169,16 @@ document.addEventListener('DOMContentLoaded', async function() {
           '<button type="button" class="lang-btn active" data-lang="en">English</button>' +
           '<button type="button" class="lang-btn" data-lang="zh-tw">繁體中文</button>' +
         '</div>' +
-        '<a href="#ready" class="btn btn-gold">Message Us</a>' +
+        '<a href="#ready" class="lang-btn nav-msg" data-i18n="msg-us">Message Us</a>' +
       '</div>'
     );
 
-    // Hero: full-viewport video background only — no overlay text, and the
-    // Social Proof (trust) bar is dropped entirely along with the old hero.
+    // Hero: full-viewport video background ("Stay Seoul Like a Local (2)",
+    // used as-is — no filters/overlays/grading) plus a timed text overlay
+    // ("Know SEOUL" 0–10.8s, "Stay ANDDA" 10.8–31.8s, cross-faded by the
+    // .hero-text/.is-visible CSS transition driven from the video's
+    // timeupdate event — see the handler near the language-toggle wiring).
+    // The Social Proof (trust) bar is dropped entirely along with the old hero.
     var heroIdx = template.indexOf('<section class="hero"');
     var propsIdx = template.indexOf('<' + '!-- ================= PROPERTIES');
     if (heroIdx >= 0 && propsIdx >= 0) {
@@ -178,9 +186,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         '<section class="hero" id="top">' +
           '<div class="hero-bg">' +
             '<video autoplay loop muted playsinline>' +
-              '<source src="/public/videos/stay-seoul-like-a-local.mp4" type="video/mp4">' +
+              '<source src="/public/videos/stay-seoul-like-a-local-2.mp4" type="video/mp4">' +
             '</video>' +
           '</div>' +
+          '<div class="hero-text" data-phase="know"><span>Know SEOUL</span></div>' +
+          '<div class="hero-text" data-phase="stay"><span>Stay ANDDA</span></div>' +
         '</section>\n\n' +
         template.slice(propsIdx);
     }
@@ -188,11 +198,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     // About Section ("The Collection"): new title + two-paragraph description
     template = template.replace(
       /<p class="eyebrow">The Collection<\/p>[\s\S]*?<h2>Three homes, <em>one warm welcome<\/em><\/h2>/,
-      '<h2>The Collection</h2>'
+      '<h2 data-i18n="about-title">The Collection</h2>'
     );
     template = template.replace(
       "Each stay is set up for groups and families — full kitchens, generous bedrooms, and the quiet of a residential street that's still moments from the metro.",
-      'A collection of family and group stays near Seoul Station.</p><p>Each home offers spacious bedrooms, a full kitchen, a comfortable living area, and the quiet charm of a local residential neighborhood.'
+      '<span data-i18n="about-desc-1">A collection of family and group stays near Seoul Station.</span></p>' +
+      '<p><span data-i18n="about-desc-2">Each home offers spacious bedrooms, a full kitchen, a comfortable living area, and the quiet charm of a local residential neighborhood.</span>'
     );
 
     // About Section cards: new photos, copy, ratings, specs — prices removed
@@ -200,19 +211,19 @@ document.addEventListener('DOMContentLoaded', async function() {
       /<article class="prop-card" data-reveal="" data-d="1">[\s\S]*?<\/article>/,
       '<article class="prop-card" data-reveal="" data-d="1">' +
         '<div class="prop-photo">' +
-          '<img src="/public/images/seoul-station-family-room-1.jpg" alt="SJ House 1st family room near Seoul Station">' +
+          '<img src="/public/images/seoul-station-family-room-41.jpg" alt="SJ House 1st family room near Seoul Station">' +
           '<span class="tag">SJ House 1st</span>' +
         '</div>' +
         '<div class="prop-body">' +
           '<h3>SJ House 1st</h3>' +
-          '<p class="desc">A family-friendly home just 5 minutes from Seoul Station, with no stairs for a smooth and comfortable stay.</p>' +
+          '<p class="desc" data-i18n="prop1-desc">A family-friendly home just 5 minutes from Seoul Station, with no stairs for a smooth and comfortable stay.</p>' +
           '<div class="prop-specs">' +
-            '<div class="s"><div class="v">Up to 8</div><div class="k">Guests</div></div>' +
-            '<div class="s"><div class="v">3</div><div class="k">Bedrooms</div></div>' +
-            '<div class="s"><div class="v">5 min</div><div class="k">To Station</div></div>' +
+            '<div class="s"><div class="v">Up to 8</div><div class="k" data-i18n="spec-guests">Guests</div></div>' +
+            '<div class="s"><div class="v">3</div><div class="k" data-i18n="spec-bedrooms">Bedrooms</div></div>' +
+            '<div class="s"><div class="v">5 min</div><div class="k" data-i18n="spec-station">To Station</div></div>' +
           '</div>' +
-          '<div class="prop-rating"><span class="stars">★★★★★</span><span class="rating-label">4.97 Average Rating</span></div>' +
-          '<a href="https://airbnb.com/h/sjhouse1st" target="_blank" rel="noopener" class="btn btn-gold btn-block">Book on Airbnb</a>' +
+          '<div class="prop-rating"><span class="stars">★★★★★</span><span class="rating-label">4.97 <span data-i18n="avg-rating">Average Rating</span></span></div>' +
+          '<a href="https://airbnb.com/h/sjhouse1st" target="_blank" rel="noopener" class="btn btn-gold btn-block" data-i18n="book-airbnb">Book on Airbnb</a>' +
         '</div>' +
       '</article>'
     );
@@ -225,14 +236,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         '</div>' +
         '<div class="prop-body">' +
           '<h3>SJ House 2nd</h3>' +
-          '<p class="desc">Two homes side by side, thoughtfully prepared for families and groups, just 5 minutes from Seoul Station.</p>' +
+          '<p class="desc" data-i18n="prop2-desc">Two homes side by side, thoughtfully prepared for families and groups, just 5 minutes from Seoul Station.</p>' +
           '<div class="prop-specs">' +
-            '<div class="s"><div class="v">Up to 8</div><div class="k">Guests</div></div>' +
-            '<div class="s"><div class="v">4</div><div class="k">Bedrooms</div></div>' +
-            '<div class="s"><div class="v">5 min</div><div class="k">To Station</div></div>' +
+            '<div class="s"><div class="v">Up to 8</div><div class="k" data-i18n="spec-guests">Guests</div></div>' +
+            '<div class="s"><div class="v">4</div><div class="k" data-i18n="spec-bedrooms">Bedrooms</div></div>' +
+            '<div class="s"><div class="v">5 min</div><div class="k" data-i18n="spec-station">To Station</div></div>' +
           '</div>' +
-          '<div class="prop-rating"><span class="stars">★★★★★</span><span class="rating-label">4.96 Average Rating</span></div>' +
-          '<a href="https://airbnb.com/h/sjhouse2nd" target="_blank" rel="noopener" class="btn btn-gold btn-block">Book on Airbnb</a>' +
+          '<div class="prop-rating"><span class="stars">★★★★★</span><span class="rating-label">4.96 <span data-i18n="avg-rating">Average Rating</span></span></div>' +
+          '<a href="https://airbnb.com/h/sjhouse2nd" target="_blank" rel="noopener" class="btn btn-gold btn-block" data-i18n="book-airbnb">Book on Airbnb</a>' +
         '</div>' +
       '</article>'
     );
@@ -245,30 +256,68 @@ document.addEventListener('DOMContentLoaded', async function() {
         '</div>' +
         '<div class="prop-body">' +
           '<h3>ANDDA Stay</h3>' +
-          '<p class="desc">A private family home with 3 bedrooms and 2.5 bathrooms, just 5 minutes from Seoul Station.</p>' +
+          '<p class="desc" data-i18n="prop3-desc">A private family home with 3 bedrooms and 2.5 bathrooms, just 5 minutes from Seoul Station.</p>' +
           '<div class="prop-specs">' +
-            '<div class="s"><div class="v">Up to 8</div><div class="k">Guests</div></div>' +
-            '<div class="s"><div class="v">3</div><div class="k">Bedrooms</div></div>' +
-            '<div class="s"><div class="v">5 min</div><div class="k">To Station</div></div>' +
+            '<div class="s"><div class="v">Up to 8</div><div class="k" data-i18n="spec-guests">Guests</div></div>' +
+            '<div class="s"><div class="v">3</div><div class="k" data-i18n="spec-bedrooms">Bedrooms</div></div>' +
+            '<div class="s"><div class="v">5 min</div><div class="k" data-i18n="spec-station">To Station</div></div>' +
           '</div>' +
-          '<div class="prop-rating"><span class="stars">★★★★★</span><span class="rating-label">4.97 Average Rating</span></div>' +
-          '<a href="https://airbnb.com/h/sjandda" target="_blank" rel="noopener" class="btn btn-gold btn-block">Book on Airbnb</a>' +
+          '<div class="prop-rating"><span class="stars">★★★★★</span><span class="rating-label">4.97 <span data-i18n="avg-rating">Average Rating</span></span></div>' +
+          '<a href="https://airbnb.com/h/sjandda" target="_blank" rel="noopener" class="btn btn-gold btn-block" data-i18n="book-airbnb">Book on Airbnb</a>' +
         '</div>' +
       '</article>'
     );
 
-    // Location Section: swap embedded map for a direct link to the Google Maps location
+    // Location Section: swap embedded map for the neighborhood photo, with
+    // "ANDDA STAY" and "Seoul Station" highlighted in bold red near their map
+    // pins (English captions over the Korean-labelled photo), wrapped in a
+    // link straight through to the Google Maps listing. Uses a dedicated
+    // .map-photo-link class (not .map-link) so it draws its own layout/type
+    // rather than the old centered icon-card styling meant for a placeholder.
     template = template.replace(
       /<iframe title="Map of Cheongpa-dong, near Seoul Station"[\s\S]*?<\/iframe>/,
-      '<a class="map-link" href="https://maps.app.goo.gl/2u3q42eRjbBn3JHL7" target="_blank" rel="noopener" aria-label="Open our location in Google Maps">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" width="40" height="40"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>' +
-        '<span>Open in Google Maps</span>' +
+      '<a class="map-photo-link" href="https://maps.app.goo.gl/2u3q42eRjbBn3JHL7" target="_blank" rel="noopener" aria-label="Open ANDDA STAY\'s location near Seoul Station in Google Maps">' +
+        '<img src="/public/images/seoul-station-family-room-51.jpg" alt="Map of the neighborhood showing ANDDA STAY near Seoul Station">' +
+        '<span class="map-badge map-badge-a">ANDDA STAY</span>' +
+        '<span class="map-badge map-badge-b">Seoul Station</span>' +
+        '<span class="map-open">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>' +
+          '<span data-i18n="map-link">Open in Google Maps</span>' +
+        '</span>' +
       '</a>'
     );
     template = template.replace(
       '<div class="map-pin"><span class="dot"></span><span>Cheongpa-dong, Yongsan-gu — steps from Seoul Station</span></div>',
-      '<div class="map-pin"><span class="dot"></span><span>5 minutes from Seoul Station — tap to view on Google Maps</span></div>'
+      '<div class="map-pin"><span class="dot"></span><span data-i18n="map-pin">5 minutes from Seoul Station — tap the map to open it in Google Maps</span></div>'
     );
+
+    // Location Section copy (eyebrow / heading / intro / the three info points):
+    // tagged with data-i18n so the language switcher can translate them too.
+    template = template
+      .replace(
+        '<p class="eyebrow">The Location</p>',
+        '<p class="eyebrow" data-i18n="loc-eyebrow">The Location</p>'
+      )
+      .replace(
+        '<h2 style="font-size:clamp(34px,4.6vw,58px);margin-bottom:18px;">Why <em>Seoul Station</em>?</h2>',
+        '<h2 style="font-size:clamp(34px,4.6vw,58px);margin-bottom:18px;" data-i18n="loc-title">Why <em>Seoul Station</em>?</h2>'
+      )
+      .replace(
+        "<p style=\"color:var(--muted);font-size:17px;font-weight:300;max-width:440px;\">Cheongpa-dong puts you on the doorstep of Korea's busiest transport hub — and a short walk from the landmarks you came to see.</p>",
+        "<p style=\"color:var(--muted);font-size:17px;font-weight:300;max-width:440px;\" data-i18n=\"loc-desc\">Cheongpa-dong puts you on the doorstep of Korea's busiest transport hub — and a short walk from the landmarks you came to see.</p>"
+      )
+      .replace(
+        '<h4>5 minutes to Seoul Station</h4><p>KTX high-speed rail, the AREX airport line, and four subway lines from a single hub.</p>',
+        '<h4 data-i18n="loc-pt1-h">5 minutes to Seoul Station</h4><p data-i18n="loc-pt1-p">KTX high-speed rail, the AREX airport line, and four subway lines from a single hub.</p>'
+      )
+      .replace(
+        '<h4>Myeongdong &amp; Namsan close by</h4><p>Shopping, street food, and N Seoul Tower — all within two stops or a short taxi.</p>',
+        '<h4 data-i18n="loc-pt2-h">Myeongdong &amp; Namsan close by</h4><p data-i18n="loc-pt2-p">Shopping, street food, and N Seoul Tower — all within two stops or a short taxi.</p>'
+      )
+      .replace(
+        '<h4>Gyeongbokgung &amp; old Seoul</h4><p>The royal palaces, Bukchon Hanok Village, and Insadong are a 15-minute ride away.</p>',
+        '<h4 data-i18n="loc-pt3-h">Gyeongbokgung &amp; old Seoul</h4><p data-i18n="loc-pt3-p">The royal palaces, Bukchon Hanok Village, and Insadong are a 15-minute ride away.</p>'
+      );
 
     // Guest Voices (Reviews) Section: removed entirely
     var reviewsIdx = template.indexOf('<' + '!-- ================= REVIEWS');
@@ -287,40 +336,40 @@ document.addEventListener('DOMContentLoaded', async function() {
         '<section class="block serv" id="why-us">' +
           '<div class="wrap">' +
             '<div class="sec-head" data-reveal="">' +
-              '<p class="eyebrow">BEYOND THE STAY</p>' +
-              '<h2>Little extras that make your Seoul stay easier</h2>' +
-              '<p>Thoughtful services and in-home conveniences prepared for families and groups traveling through Seoul.</p>' +
+              '<p class="eyebrow" data-i18n="serv-eyebrow">BEYOND THE STAY</p>' +
+              '<h2 data-i18n="serv-title">Little extras that make your Seoul stay easier</h2>' +
+              '<p data-i18n="serv-desc">Thoughtful services and in-home conveniences prepared for families and groups traveling through Seoul.</p>' +
             '</div>' +
             '<div class="serv-grid">' +
               '<article class="serv-card" data-reveal="" data-d="1">' +
                 '<div class="num">01</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 16l9-12 9 12M2 16h20M2 16l3 4h14l3-4" stroke-linejoin="round"></path></svg>' +
-                '<h3>Airport Pickup</h3>' +
-                '<p>Enjoy complimentary airport pickup for stays of 7 nights or more. A private driver can meet you at Incheon or Gimpo for a smoother arrival.</p>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 16.5V10a1 1 0 0 1 1-1h10.5l4 3.5v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" stroke-linejoin="round"></path><path d="M14.5 9v7.5"></path><path d="M3 13.5h6"></path><circle cx="7.5" cy="17" r="1.7"></circle><circle cx="16.5" cy="17" r="1.7"></circle></svg>' +
+                '<h3 data-i18n="serv1-h">Airport Pickup</h3>' +
+                '<p data-i18n="serv1-p">Enjoy complimentary airport pickup for stays of 7 nights or more. A private driver can meet you at Incheon or Gimpo for a smoother arrival.</p>' +
               '</article>' +
               '<article class="serv-card" data-reveal="" data-d="2">' +
                 '<div class="num">02</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4l4 4M6 4a2 2 0 1 0-3 0 2 2 0 0 0 3 0zM18 20l-8-8M21 20a2 2 0 1 1-3 0 2 2 0 0 1 3 0zM14 10l6-6"></path></svg>' +
-                '<h3>Hair Salon Referral</h3>' +
-                '<p>Planning a beauty day in Seoul? We can help arrange a booking at a popular hair salon in Myeongdong with a special 10% guest discount.</p>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="2.4"></circle><circle cx="6.5" cy="17.5" r="2.4"></circle><path d="M8.7 8 19 18.5M8.7 16 19 5.5" stroke-linecap="round"></path></svg>' +
+                '<h3 data-i18n="serv2-h">Hair Salon Referral</h3>' +
+                '<p data-i18n="serv2-p">Planning a beauty day in Seoul? We can help arrange a booking at a popular hair salon in Myeongdong with a special 10% guest discount.</p>' +
               '</article>' +
               '<article class="serv-card" data-reveal="" data-d="3">' +
                 '<div class="num">03</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="5" width="12" height="16" rx="1.5"></rect><path d="M9 2.5c0 1-1 1-1 2s1 1 1 2M14 2.5c0 1-1 1-1 2s1 1 1 2" stroke-linecap="round"></path></svg>' +
-                '<h3>Steam Closet</h3>' +
-                '<p>Refresh your clothes during your trip with our in-home steam closet — a travel essential for families, long stays, and special outings.</p>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 18h11a3.5 3.5 0 0 0 3.5-3.5v-1A3.5 3.5 0 0 0 14.5 10H8z" stroke-linejoin="round"></path><path d="M3.5 18v-2.4"></path><path d="M9 6c.7-.8.7-1.7 0-2.5M12.5 6c.7-.8.7-1.7 0-2.5" stroke-linecap="round"></path></svg>' +
+                '<h3 data-i18n="serv3-h">Steam Closet</h3>' +
+                '<p data-i18n="serv3-p">Refresh your clothes during your trip with our in-home steam closet — a travel essential for families, long stays, and special outings.</p>' +
               '</article>' +
               '<article class="serv-card" data-reveal="" data-d="4">' +
                 '<div class="num">04</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="16" height="11" rx="2"></rect><path d="M9 9V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"></path><path d="M4 14h16"></path></svg>' +
-                '<h3>Free Luggage Storage</h3>' +
-                '<p>Arrive early or leave late with ease. We offer complimentary luggage storage so you can explore Seoul hands-free.</p>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="16" height="13" rx="2"></rect><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"></path><path d="M4 13h16"></path></svg>' +
+                '<h3 data-i18n="serv4-h">Free Luggage Storage</h3>' +
+                '<p data-i18n="serv4-p">Arrive early or leave late with ease. We offer complimentary luggage storage so you can explore Seoul hands-free.</p>' +
               '</article>' +
               '<article class="serv-card" data-reveal="" data-d="5">' +
                 '<div class="num">05</div>' +
-                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M10 19h4" stroke-linecap="round"></path><path d="M9 8h6M9 11h6M9 14h4" stroke-linecap="round"></path></svg>' +
-                '<h3>Local Food &amp; Grocery Tablet</h3>' +
-                '<p>Use our dedicated guest tablet to conveniently order local delivery food, groceries, and daily essentials during your stay.</p>' +
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="16" r="3.3"></circle><path d="M8.3 13.7 12 8.2" stroke-linecap="round"></path><path d="M10.6 9.8h2.3" stroke-linecap="round"></path><path d="M13.5 8.3h6.5v9.7a1.5 1.5 0 0 1-1.5 1.5h-3.5a1.5 1.5 0 0 1-1.5-1.5z"></path><path d="M20 11h.8a1.5 1.5 0 0 1 0 3h-.8"></path><path d="M15 8.3V6.7M17.5 8.3V6.7M19.7 8.3V7" stroke-linecap="round"></path></svg>' +
+                '<h3 data-i18n="serv5-h">Local Food &amp; Grocery Tablet</h3>' +
+                '<p data-i18n="serv5-p">Use our dedicated guest tablet to conveniently order local delivery food, groceries, and daily essentials during your stay.</p>' +
               '</article>' +
             '</div>' +
           '</div>' +
@@ -337,6 +386,33 @@ document.addEventListener('DOMContentLoaded', async function() {
       );
     template = template.split('0000000000').join('821046411656');
 
+    // Ready to Book: i18n tags + WhatsApp click-to-chat with prefilled inquiry message
+    template = template
+      .replace(
+        '<h2>Ready to book your <em>Seoul home</em>?</h2>',
+        '<h2 data-i18n="ready-title">Ready to book your <em>Seoul home</em>?</h2>'
+      )
+      .replace(
+        "<p>Pick the stay that suits your group, or message us directly — we'll help you choose.</p>",
+        '<p data-i18n="ready-desc">' + "Pick the stay that suits your group, or message us directly — we'll help you choose." + '</p>'
+      )
+      .replace(
+        'Message us on WhatsApp',
+        '<span data-i18n="wa-btn">Message us on WhatsApp</span>'
+      );
+    const waMessage =
+      'Hello ANDDA STAY,\n\n' +
+      'I would like to inquire about availability.\n\n' +
+      'Preferred Property:\n[Guest enters property name]\n\n' +
+      'Check-in Date:\n[Guest enters date]\n\n' +
+      'Check-out Date:\n[Guest enters date]\n\n' +
+      'Number of Guests:\n[Guest enters guest count]\n\n' +
+      'Thank you.';
+    template = template.replace(
+      '<a href="https://wa.me/821046411656" target="_blank" rel="noopener" class="btn btn-wa">',
+      '<a href="https://wa.me/821046411656?text=' + encodeURIComponent(waMessage) + '" target="_blank" rel="noopener" class="btn btn-wa">'
+    );
+
     // Brand Footer: ANDDA STAY name, description, copyright, Explore links, contact
     template = template
       .replace(
@@ -345,13 +421,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       )
       .replace(
         'Three premium short-term stays in Cheongpa-dong, minutes from Seoul Station. Hosted with care since 2016 by a 9-year Superhost.',
-        'Three premium short-term stays in Seoul Station, Hosted with care since 2017 by a 10-year Superhost.'
+        '<span data-i18n="foot-desc">Three premium short-term stays in Seoul Station, Hosted with care since 2017 by a 10-year Superhost.</span>'
       )
       .replace(
         '© 2026 SJ House Seoul · Cheongpa-dong, Yongsan-gu, Seoul · All rights reserved.',
-        '© 2026 ANDDA Stay · Family Homes Near Seoul Station · All rights reserved.'
+        '<span data-i18n="foot-cp">© 2026 ANDDA Stay · Family Homes Near Seoul Station · All rights reserved.</span>'
       )
-      .replace('<a href="#book">Book Direct</a>', '<a href="#ready">Message Us</a>')
+      .replace('<h5>Our Stays</h5>', '<h5 data-i18n="foot-stays">Our Stays</h5>')
+      .replace('<h5>Contact</h5>', '<h5 data-i18n="foot-contact">Contact</h5>')
+      .replace('<a href="#book">Book Direct</a>', '<a href="#ready" data-i18n="msg-us">Message Us</a>')
       .replace(
         '<a href="mailto:hello@sjhouseseoul.com">hello@sjhouseseoul.com</a>',
         '<a href="mailto:adnnastay@gmail.com">adnnastay@gmail.com</a>'
@@ -359,12 +437,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     template = template.replace(
       /<div class="foot-col">\s*<h5>Explore<\/h5>[\s\S]*?<\/div>/,
       '<div class="foot-col">' +
-        '<h5>Explore</h5>' +
-        '<a href="#properties">Stay</a>' +
-        '<a href="#location">Location</a>' +
-        '<a href="#why-us">Why Us</a>' +
+        '<h5 data-i18n="foot-explore">Explore</h5>' +
+        '<a href="#properties" data-i18n="nav-stay">Stay</a>' +
+        '<a href="#location" data-i18n="nav-location">Location</a>' +
+        '<a href="#why-us" data-i18n="nav-why">Why Us</a>' +
       '</div>'
     );
+    // Remove Instagram / Facebook / WhatsApp social icon row entirely
+    template = template.replace(/<div class="socials">[\s\S]*?<\/div>\s*/, '');
 
     // App script guarded against the now-removed Book Direct form (#offerForm/#formSuccess)
     template = template
@@ -412,12 +492,13 @@ document.addEventListener('DOMContentLoaded', async function() {
       'html{scroll-behavior:smooth!important}' +
       'section[id]{scroll-margin-top:92px!important}' +
       '.logo .name small{font-size:11px!important}' +
-      '.nav-cta{display:flex!important;align-items:center!important;gap:18px!important}' +
+      '.nav-cta{display:flex!important;align-items:center!important;gap:14px!important}' +
       '.lang-toggle{display:flex!important;align-items:center!important;gap:6px!important}' +
       '.lang-btn{font-family:inherit!important;background:transparent!important;border:1px solid rgba(243,239,230,.28)!important;color:var(--muted)!important;font-size:11px!important;font-weight:500!important;letter-spacing:.03em!important;padding:6px 12px!important;border-radius:20px!important;cursor:pointer!important;transition:all .3s var(--ease)!important;white-space:nowrap!important}' +
       '.lang-btn.active{background:var(--gold)!important;border-color:var(--gold)!important;color:#1b1f29!important}' +
       '.lang-btn:hover{border-color:var(--gold)!important;color:var(--ink)!important}' +
-      '@media(max-width:680px){.lang-toggle{display:none!important}}' +
+      '@media(max-width:680px){.nav-cta{gap:8px!important}.lang-btn{font-size:9.5px!important;padding:5px 9px!important;letter-spacing:.02em!important}.nav-msg{font-size:9.5px!important;padding:5px 9px!important}}' +
+      '@media(max-width:400px){.lang-btn[data-lang="zh-tw"]{padding:5px 7px!important}}' +
       '#properties .sec-head h2{color:#2b2420!important}' +
       '#properties .sec-head h2 em{color:#5b4630!important}' +
       '#properties .sec-head p{color:#4a4138!important}' +
@@ -429,6 +510,35 @@ document.addEventListener('DOMContentLoaded', async function() {
       '.map-frame .map-link span{font-family:"Cormorant Garamond",serif!important;font-size:21px!important;font-weight:600!important;letter-spacing:.04em!important;color:#f3efe6!important}' +
       '.map-frame .map-link:hover{filter:brightness(1.08)!important}' +
       '#why-us .serv-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important}' +
+      '.hero-text{position:absolute!important;inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;z-index:2!important;opacity:0!important;pointer-events:none!important;transition:opacity 1.1s ease!important}' +
+      '.hero-text.is-visible{opacity:1!important}' +
+      '.hero-text span{font-family:"DM Sans",sans-serif!important;font-weight:700!important;color:#fff!important;font-size:133px!important;line-height:1.05!important;letter-spacing:.01em!important;padding:0 24px!important;text-shadow:0 2px 28px rgba(0,0,0,.18)!important}' +
+      '@media(max-width:1300px){.hero-text span{font-size:96px!important}}' +
+      '@media(max-width:900px){.hero-text span{font-size:64px!important}}' +
+      '@media(max-width:560px){.hero-text span{font-size:42px!important}}' +
+      '@media(max-width:380px){.hero-text span{font-size:34px!important}}' +
+      '.nav-links{margin-left:auto!important;margin-right:28px!important;gap:26px!important}' +
+      '.nav-msg{font-family:inherit!important;background:transparent!important;border:1px solid rgba(243,239,230,.28)!important;color:var(--muted)!important;font-size:11px!important;font-weight:500!important;letter-spacing:.03em!important;padding:6px 12px!important;border-radius:20px!important;line-height:1.4!important;white-space:nowrap!important;text-decoration:none!important;display:inline-flex!important;align-items:center!important;transition:all .3s var(--ease)!important}' +
+      '.nav-msg:hover{border-color:var(--gold)!important;color:var(--ink)!important;background:transparent!important}' +
+      '.map-frame{position:relative!important}' +
+      '.map-photo-link{position:absolute!important;inset:0!important;display:block!important;text-decoration:none!important}' +
+      '.map-photo-link img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}' +
+      '.map-badge{position:absolute!important;background:rgba(255,255,255,.94)!important;color:#c81e1e!important;font-weight:700!important;font-size:13px!important;letter-spacing:.02em!important;padding:6px 14px!important;border-radius:999px!important;box-shadow:0 4px 14px rgba(0,0,0,.18)!important;white-space:nowrap!important;transform:translate(-50%,-50%)!important}' +
+      '.map-badge-a{top:53%!important;left:13%!important}' +
+      '.map-badge-b{top:27%!important;left:56%!important}' +
+      '.map-open{position:absolute!important;right:16px!important;bottom:16px!important;display:inline-flex!important;align-items:center!important;gap:8px!important;background:rgba(27,31,41,.82)!important;color:#f3efe6!important;font-family:"Cormorant Garamond",serif!important;font-size:15px!important;font-weight:600!important;letter-spacing:.03em!important;padding:9px 16px!important;border-radius:999px!important;backdrop-filter:blur(4px)!important}' +
+      '@media(max-width:680px){.map-badge{font-size:11px!important;padding:5px 11px!important}.map-open{font-size:13px!important;padding:7px 13px!important}}' +
+      '.final-btns,.wa-row{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:stretch!important;gap:14px!important}' +
+      '.final-btns .btn,.wa-row .btn{flex:0 0 auto!important;width:272px!important;height:54px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:0 18px!important;box-sizing:border-box!important;text-align:center!important;white-space:nowrap!important;font-size:13px!important}' +
+      '@media(max-width:540px){.final-btns .btn,.wa-row .btn{width:100%!important}}' +
+      'footer{background:#cabb9d!important}' +
+      'footer .logo .name{color:#2b2420!important}' +
+      'footer .foot-brand p{color:#463d33!important}' +
+      '.foot-col h5{color:#2b2420!important}' +
+      '.foot-col a{color:#463d33!important}' +
+      '.foot-col a:hover{color:#1f1a16!important}' +
+      '.foot-bottom .cp{color:#5b5247!important}' +
+      '.copyright-note{color:#5b5247!important;font-size:12px!important;letter-spacing:.02em!important;margin-top:6px!important}' +
       '</style>';
 
     // Inject after <head> so the DOCTYPE stays first; prepending the script
@@ -472,13 +582,83 @@ document.addEventListener('DOMContentLoaded', async function() {
       window.Babel.transformScriptTags();
     }
 
-    // Language toggle: visual active-state switch for the nav buttons
+    // Hero overlay text timing: fade "Know SEOUL" / "Stay ANDDA" in sync with the video
+    var heroVideoEl = document.querySelector('.hero-bg video');
+    var heroText1 = document.querySelector('.hero-text[data-phase="know"]');
+    var heroText2 = document.querySelector('.hero-text[data-phase="stay"]');
+    if (heroVideoEl && heroText1 && heroText2) {
+      heroVideoEl.addEventListener('timeupdate', function() {
+        var t = heroVideoEl.currentTime;
+        heroText1.classList.toggle('is-visible', t >= 0 && t < 10.8);
+        heroText2.classList.toggle('is-visible', t >= 10.8 && t < 31.8);
+      });
+    }
+
+    // Language toggle: translate the entire site between English and Traditional Chinese
+    var ZH_TW = {
+      'logo-sub': '像在地人一樣感受首爾',
+      'nav-stay': '住宿',
+      'nav-location': '位置',
+      'nav-why': '為什麼選擇我們',
+      'msg-us': '聯絡我們',
+      'about-title': '精選房源',
+      'about-desc-1': '鄰近首爾站，專為家庭與團體旅客打造的住宿選擇。',
+      'about-desc-2': '每個住所皆配備寬敞臥室、完整廚房、舒適的客廳，並坐落於寧靜怡人的住宅社區之中。',
+      'prop1-desc': '溫馨宜人的住宅，距離首爾站僅 5 分鐘，無樓梯設計，入住更加輕鬆舒適。',
+      'prop2-desc': '兩間相鄰的住宅，特別為家庭與團體旅客精心準備，距離首爾站僅 5 分鐘。',
+      'prop3-desc': '獨棟家庭住宅，擁有 3 間臥室與 2.5 間衛浴，距離首爾站僅 5 分鐘。',
+      'spec-guests': '位旅客',
+      'spec-bedrooms': '間臥室',
+      'spec-station': '分鐘抵達車站',
+      'avg-rating': '平均評分',
+      'book-airbnb': '透過 Airbnb 預訂',
+      'map-link': '在 Google 地圖中開啟',
+      'map-pin': '距離首爾站僅 5 分鐘 — 點擊地圖即可在 Google 地圖中開啟',
+      'loc-eyebrow': '所在位置',
+      'loc-title': '為什麼選擇<em>首爾站</em>？',
+      'loc-desc': '青坡洞讓您輕鬆抵達韓國最繁忙的交通樞紐 — 步行即可到達您嚮往已久的景點。',
+      'loc-pt1-h': '5 分鐘抵達首爾站',
+      'loc-pt1-p': 'KTX 高速鐵路、機場快線（AREX）以及四條地鐵線，皆可在同一座車站轉乘。',
+      'loc-pt2-h': '鄰近明洞與南山',
+      'loc-pt2-p': '購物、街頭小吃、N 首爾塔 — 只需兩站地鐵或短程計程車即可抵達。',
+      'loc-pt3-h': '景福宮與舊首爾風情',
+      'loc-pt3-p': '王宮、北村韓屋村與仁寺洞，車程僅約 15 分鐘。',
+      'serv-eyebrow': '入住之外的貼心服務',
+      'serv-title': '讓您首爾旅程更輕鬆的貼心服務',
+      'serv-desc': '專為家庭與團體旅客準備的周到服務與居家便利設施。',
+      'serv1-h': '機場接送',
+      'serv1-p': '入住 7 晚以上即可享有免費機場接送服務，專屬司機於仁川或金浦機場接機，讓您的行程更加順暢。',
+      'serv2-h': '美髮沙龍推薦',
+      'serv2-p': '計劃在首爾安排美容行程嗎？我們可協助預約明洞知名沙龍，並享有 10% 住客優惠。',
+      'serv3-h': '蒸氣櫥櫃',
+      'serv3-p': '旅途中可使用居家蒸氣櫥櫃保持衣物清新整潔 — 是家庭旅遊、長住與特殊場合的必備設施。',
+      'serv4-h': '免費行李寄存',
+      'serv4-p': '提早抵達或延後離開都不成問題，我們提供免費行李寄存服務，讓您輕鬆探索首爾。',
+      'serv5-h': '在地美食與生活雜貨平板',
+      'serv5-p': '使用我們專屬的住客平板，輕鬆訂購在地外送美食、生活雜貨與日常用品。',
+      'ready-title': '準備好預訂您的<em>首爾住所</em>了嗎？',
+      'ready-desc': '挑選最適合您團體的住宿，或直接傳訊息給我們 — 我們將協助您做出選擇。',
+      'wa-btn': '透過 WhatsApp 與我們聯繫',
+      'foot-desc': '位於首爾站附近的三間頂級短期住宿，自 2017 年起由擁有 10 年經驗的超讚房東用心款待。',
+      'foot-cp': '© 2026 ANDDA Stay · 首爾站家庭式住宿 · 版權所有',
+      'foot-stays': '我們的住宿',
+      'foot-contact': '聯絡方式',
+      'foot-explore': '探索'
+    };
+    function setLanguage(lang) {
+      Array.from(document.querySelectorAll('[data-i18n]')).forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (el.dataset.i18nEn === undefined) el.dataset.i18nEn = el.innerHTML;
+        el.innerHTML = (lang === 'zh-tw' && ZH_TW[key]) ? ZH_TW[key] : el.dataset.i18nEn;
+      });
+      document.documentElement.setAttribute('lang', lang === 'zh-tw' ? 'zh-Hant' : 'en');
+      Array.from(document.querySelectorAll('.lang-btn')).forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+      });
+    }
     Array.from(document.querySelectorAll('.lang-btn')).forEach(function(btn) {
       btn.addEventListener('click', function() {
-        Array.from(document.querySelectorAll('.lang-btn')).forEach(function(b) {
-          b.classList.remove('active');
-        });
-        btn.classList.add('active');
+        setLanguage(btn.getAttribute('data-lang'));
       });
     });
   } catch (err) {
