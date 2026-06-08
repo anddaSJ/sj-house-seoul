@@ -425,7 +425,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       )
       .replace(
         '© 2026 SJ House Seoul · Cheongpa-dong, Yongsan-gu, Seoul · All rights reserved.',
-        '<span data-i18n="foot-cp">© 2026 ANDDA Stay · Family Homes Near Seoul Station · All rights reserved.</span>'
+        '<span data-i18n="foot-cp">© 2026 ANDDA Stay · Family Homes Near Seoul Station · All rights reserved.</span>' +
+        '<span class="copyright-note" data-i18n="foot-copyright-note">All content, photographs, branding, and design elements are protected by copyright.</span>'
       )
       .replace('<h5>Our Stays</h5>', '<h5 data-i18n="foot-stays">Our Stays</h5>')
       .replace('<h5>Contact</h5>', '<h5 data-i18n="foot-contact">Contact</h5>')
@@ -538,7 +539,11 @@ document.addEventListener('DOMContentLoaded', async function() {
       '.foot-col a{color:#463d33!important}' +
       '.foot-col a:hover{color:#1f1a16!important}' +
       '.foot-bottom .cp{color:#5b5247!important}' +
-      '.copyright-note{color:#5b5247!important;font-size:12px!important;letter-spacing:.02em!important;margin-top:6px!important}' +
+      '.copyright-note{display:block!important;color:#5b5247!important;font-size:12px!important;letter-spacing:.02em!important;margin-top:6px!important}' +
+      '.prop-photo::after,.final-bg::after{content:"\\00a9 ANDDA STAY"!important;position:absolute!important;right:14px!important;bottom:14px!important;color:rgba(255,255,255,.42)!important;font-family:"DM Sans",sans-serif!important;font-size:11px!important;font-weight:600!important;letter-spacing:.09em!important;text-transform:uppercase!important;text-shadow:0 1px 4px rgba(0,0,0,.4)!important;pointer-events:none!important;z-index:2!important;user-select:none!important}' +
+      'body{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}' +
+      'input,textarea,select,[contenteditable],[contenteditable] *{-webkit-user-select:text!important;-moz-user-select:text!important;-ms-user-select:text!important;user-select:text!important;-webkit-touch-callout:default!important}' +
+      'img{-webkit-user-drag:none!important;user-drag:none!important;-webkit-touch-callout:none!important}' +
       '</style>';
 
     // Inject after <head> so the DOCTYPE stays first; prepending the script
@@ -641,6 +646,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       'wa-btn': '透過 WhatsApp 與我們聯繫',
       'foot-desc': '位於首爾站附近的三間頂級短期住宿，自 2017 年起由擁有 10 年經驗的超讚房東用心款待。',
       'foot-cp': '© 2026 ANDDA Stay · 首爾站家庭式住宿 · 版權所有',
+      'foot-copyright-note': '所有內容、照片、品牌與設計元素均受版權保護。',
       'foot-stays': '我們的住宿',
       'foot-contact': '聯絡方式',
       'foot-explore': '探索'
@@ -661,6 +667,35 @@ document.addEventListener('DOMContentLoaded', async function() {
         setLanguage(btn.getAttribute('data-lang'));
       });
     });
+    // Content protection: discourage casual copying (graceful — no website can be fully copy-proof)
+    (function() {
+      function isFormField(el) {
+        return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable);
+      }
+      document.addEventListener('contextmenu', function(e) {
+        if (!isFormField(e.target)) e.preventDefault();
+      });
+      document.addEventListener('copy', function(e) {
+        if (!isFormField(e.target)) e.preventDefault();
+      });
+      document.addEventListener('cut', function(e) {
+        if (!isFormField(e.target)) e.preventDefault();
+      });
+      document.addEventListener('dragstart', function(e) {
+        var t = e.target;
+        if (t && (t.tagName === 'IMG' || t.tagName === 'VIDEO')) e.preventDefault();
+      });
+      document.addEventListener('keydown', function(e) {
+        var k = e.key;
+        var mod = e.ctrlKey || e.metaKey;
+        if (k === 'F12') { e.preventDefault(); return; }
+        if (mod && e.shiftKey && (k === 'I' || k === 'i' || k === 'J' || k === 'j')) { e.preventDefault(); return; }
+        if (mod && !e.shiftKey && (k === 'u' || k === 'U' || k === 's' || k === 'S')) { e.preventDefault(); return; }
+      });
+      Array.from(document.querySelectorAll('img')).forEach(function(img) {
+        img.setAttribute('draggable', 'false');
+      });
+    })();
   } catch (err) {
     setStatus('Error unpacking: ' + err.message);
     console.error('Bundle unpack error:', err);
