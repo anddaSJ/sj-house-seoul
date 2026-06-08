@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>SJ House Seoul · Your Family's Home in the Heart of Seoul</title>
+  <title>SJ ANDDA Stay · Your Family's Home in the Heart of Seoul</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #c4b49a; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -145,6 +145,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     template = template.replace(
       '<small>Cheongpa-dong · Seoul Station</small>',
       '<small data-i18n="logo-sub">Stay Seoul Like a Local</small>'
+    );
+
+    // Document title
+    template = template.replace(
+      '<title>SJ House Seoul · Your Family\'s Home in the Heart of Seoul</title>',
+      '<title>SJ ANDDA Stay · Your Family\'s Home in the Heart of Seoul</title>'
     );
 
     // Nav: update menu items (Stay, Location, Why Us) — grouped via CSS
